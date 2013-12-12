@@ -2,7 +2,7 @@ import Dependencies._
 
 organization := "com.gu"
 
-name := "liveblog-body-parser"
+name := "flexible-content-body-parser"
 
 version := "0.1"
 
