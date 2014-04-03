@@ -6,6 +6,7 @@ import scala.xml.Node
 import scala.annotation.tailrec
 import grizzled.slf4j.Logging
 import com.gu.util.liveblogs.lib.TagSoupHelper
+import org.joda.time.format.ISODateTimeFormat
 
 /** Live blogs are converted into a blob of HTML before being inserted into Content API. This will change in the future,
   * but for now we have to parse that blob to reconstruct the separate blocks.
@@ -42,8 +43,11 @@ case object KeyEvent extends BlockType
 case object Summary extends BlockType
 
 object Block extends Logging {
-  private def extractTime(node: Node) =
-    new DateTime((node \ "time" \ "@datetime").text).toDateTime(DateTimeZone.UTC).withMillisOfSecond(0)
+  private def extractTime(node: Node) = {
+    ISODateTimeFormat.dateTime().parseDateTime((node \ "time" \ "@datetime").text)
+      .toDateTime(DateTimeZone.UTC)
+      .withMillisOfSecond(0)
+  }
 
   private[liveblogs] def fromNode(bodyDiv: Node): Block = {
     val Some(publishedAt) = (bodyDiv \ "p").find(_.hasClass("published-time")).map(extractTime)

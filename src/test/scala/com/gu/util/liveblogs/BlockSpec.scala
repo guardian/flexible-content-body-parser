@@ -21,7 +21,7 @@ class BlockSpec extends Specification {
 
       block.id mustEqual "block-523aabb9e4b0b2ce000658b3"
       block.title mustEqual Some("No taper: What the papers say")
-      block.publishedDateTime mustEqual new DateTime(2013, 9, 19, 8, 2, 34, 0, DateTimeZone.UTC)
+      block.publishedDateTime mustEqual new DateTime(2013, 9, 19, 9, 2, 34, 0, DateTimeZone.UTC)
       block.lastUpdatedDateTime mustEqual None
       block.postType mustEqual Summary
       block.body must contain("Photograph: City AM")

@@ -15,7 +15,7 @@ trait BlockFixtures extends Scope {
 
   val summaryBlockHtml = <div id="block-523aabb9e4b0b2ce000658b3" class="block is-summary">
     <p class="block-time published-time">
-      <time datetime="2013-09-19T09:02:34.353+01:00">9.02am <span class="timezone">BST</span></time></p>
+      <time datetime="2013-09-19T09:02:34.353Z">9.02am <span class="timezone">BST</span></time></p>
     <h2 class="block-title">No taper: What the papers say</h2>
     <div class="block-elements">
       <figure class="element element-image" data-media-id="gu-fc-d31c76f8-357f-47b4-9779-00acfe6f404d">
