@@ -7,6 +7,7 @@ import scala.annotation.tailrec
 import grizzled.slf4j.Logging
 import com.gu.util.liveblogs.lib.TagSoupHelper
 import org.joda.time.format.ISODateTimeFormat
+import scala.util.Try
 
 /** Live blogs are converted into a blob of HTML before being inserted into Content API. This will change in the future,
   * but for now we have to parse that blob to reconstruct the separate blocks.
@@ -44,19 +45,25 @@ case object Summary extends BlockType
 
 object Block extends Logging {
   private def extractTime(node: Node) = {
-    ISODateTimeFormat.dateTime().parseDateTime((node \ "time" \ "@datetime").text)
-      .toDateTime(DateTimeZone.UTC)
-      .withMillisOfSecond(0)
+    val dateTimeString = (node \ "time" \ "@datetime").text
+
+    Try {
+      ISODateTimeFormat.dateTime().parseDateTime(dateTimeString)
+    } orElse Try {
+      ISODateTimeFormat.dateTimeNoMillis().parseDateTime(dateTimeString)
+    } map {
+      _.toDateTime(DateTimeZone.UTC).withMillisOfSecond(0)
+    }
   }
 
   private[liveblogs] def fromNode(bodyDiv: Node): Block = {
     val Some(publishedAt) = (bodyDiv \ "p").find(_.hasClass("published-time")).map(extractTime)
-    val updatedAt = (bodyDiv \ "p").find(_.hasClass("updated-time")).map(extractTime)
+    val updatedAt = (bodyDiv \ "p").find(_.hasClass("updated-time")).flatMap(extractTime(_).toOption)
 
     Block(
       (bodyDiv \ "@id").text,
       (bodyDiv \\ "h2").find(_.hasClass("block-title")).map(_.text),
-      publishedAt,
+      publishedAt.get,
       updatedAt,
       (bodyDiv \ "div").find(_.hasClass("block-elements")).map(_.children.toHtml5String) getOrElse {
         logger.error(s"No block-elements inside LiveBlog block: ${bodyDiv.toString()}")
