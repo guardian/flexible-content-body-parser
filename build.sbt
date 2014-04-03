@@ -4,7 +4,7 @@ organization := "com.gu"
 
 name := "flexible-content-body-parser"
 
-version := "0.2"
+version := "0.3-SNAPSHOT"
 
 scalaVersion := "2.10.3"
 
