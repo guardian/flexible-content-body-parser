@@ -21,7 +21,6 @@ libraryDependencies ++= Seq(
   jSoup,
   nscalaTime,
   clapper,
-  playJson,
   specs2 % "test"
 )
 
