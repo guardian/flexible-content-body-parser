@@ -6,17 +6,18 @@ name := "flexible-content-body-parser"
 
 version := "0.3-SNAPSHOT"
 
-scalaVersion := "2.10.3"
+scalaVersion := "2.11.1"
 
 resolvers ++= Seq(
-  "Sonatype Releases" at "http://oss.sonatype.org/content/repositories/releases"
+  "Sonatype Releases" at "http://oss.sonatype.org/content/repositories/releases",
+  "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
 )
 
 libraryDependencies ++= Seq(
-  tagSoup,
+  jSoup,
   nscalaTime,
   clapper,
-  liftUtils,
+  playJson,
   specs2 % "test"
 )
 

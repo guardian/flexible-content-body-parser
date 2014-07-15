@@ -1,12 +1,16 @@
 package com.gu.util.liveblogs
 
+import org.jsoup.Jsoup
 import org.specs2.mutable.Specification
 import org.joda.time.{DateTimeZone, DateTime}
 
-class BlockSpec extends Specification {
+class BlockSpec extends Specification with ResourcesHelper {
+  def getFixture(path: String) =
+    Jsoup.parse(slurpOrDie(path)).select("body").get(0).children().get(0)
+
   "fromNode" should {
-    "correctly construct blog blocks from HTML" in new BlockFixtures {
-      val block = Block.fromNode(blogBlockHtml)
+    "correctly construct blog blocks from HTML" in {
+      val block = Block.fromElement(getFixture("blog.html"))
 
       block.id mustEqual "block-5239b800e4b04c15d3d31503"
       block.title mustEqual None
@@ -16,8 +20,8 @@ class BlockSpec extends Specification {
       block.body must contain("just to score political points")
     }
 
-    "correctly construct summary blocks from HTML" in new BlockFixtures {
-      val block = Block.fromNode(summaryBlockHtml)
+    "correctly construct summary blocks from HTML" in {
+      val block = Block.fromElement(getFixture("summary.html"))
 
       block.id mustEqual "block-523aabb9e4b0b2ce000658b3"
       block.title mustEqual Some("No taper: What the papers say")
@@ -27,8 +31,8 @@ class BlockSpec extends Specification {
       block.body must contain("Photograph: City AM")
     }
 
-    "correctly construct key events from HTML" in new BlockFixtures {
-      val block = Block.fromNode(keyEventBlockHtml)
+    "correctly construct key events from HTML" in {
+      val block = Block.fromElement(getFixture("key-event.html"))
 
       block.id mustEqual "block-523aaf9be4b0107334baad7b"
       block.title mustEqual Some("Tensions high in Greece ahead of murdered rapper's funeral")
