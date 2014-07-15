@@ -1,10 +1,14 @@
+import sbtrelease._
+import ReleaseStateTransformations._
 import Dependencies._
+
+releaseSettings
+
+sonatypeSettings
 
 organization := "com.gu"
 
 name := "flexible-content-body-parser"
-
-version := "0.3-SNAPSHOT"
 
 scalaVersion := "2.11.1"
 
@@ -21,12 +25,42 @@ libraryDependencies ++= Seq(
   specs2 % "test"
 )
 
-publishTo <<= (version) { version: String =>
-  val publishType = if (version.endsWith("SNAPSHOT")) "snapshots" else "releases"
-  Some(
-    Resolver.file(
-      "guardian github " + publishType,
-      file(System.getProperty("user.home") + "/guardian.github.com/maven/repo-" + publishType)
-    )
+description := "Scala library for converting flexible content blobs into structured content"
+
+scmInfo := Some(ScmInfo(
+  url("https://github.com/guardian/flexible-content-body-parser"),
+  "scm:git:git@github.com:guardian/flexible-content-body-parser.git"
+))
+
+pomExtra := (
+  <url>https://github.com/guardian/flexible-content-body-parser</url>
+    <developers>
+      <developer>
+        <id>robertberry</id>
+        <name>Robert Berry</name>
+        <url>https://github.com/robertberry</url>
+      </developer>
+    </developers>
   )
-}
+
+licenses := Seq("Apache V2" -> url("http://www.apache.org/licenses/LICENSE-2.0.html"))
+
+ReleaseKeys.crossBuild := true
+
+ReleaseKeys.releaseProcess := Seq[ReleaseStep](
+  checkSnapshotDependencies,
+  inquireVersions,
+  runClean,
+  runTest,
+  setReleaseVersion,
+  commitReleaseVersion,
+  tagRelease,
+  ReleaseStep(
+    action = state => Project.extract(state).runTask(PgpKeys.publishSigned, state)._1,
+    enableCrossBuild = true
+  ),
+  setNextVersion,
+  commitNextVersion,
+  ReleaseStep(state => Project.extract(state).runTask(SonatypeKeys.sonatypeReleaseAll, state)._1),
+  pushChanges
+)
