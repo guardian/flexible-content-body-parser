@@ -10,7 +10,7 @@ organization := "com.gu"
 
 name := "flexible-content-body-parser"
 
-scalaVersion := "2.11.1"
+scalaVersion := "2.11.4"
 
 resolvers ++= Seq(
   "Sonatype Releases" at "http://oss.sonatype.org/content/repositories/releases",
