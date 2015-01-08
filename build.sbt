@@ -12,6 +12,8 @@ name := "flexible-content-body-parser"
 
 scalaVersion := "2.11.4"
 
+crossScalaVersions := Seq("2.10.4", " 2.11.4")
+
 resolvers ++= Seq(
   "Sonatype Releases" at "http://oss.sonatype.org/content/repositories/releases",
   "Typesafe repository" at "http://repo.typesafe.com/typesafe/releases/"
